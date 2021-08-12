@@ -1,0 +1,149 @@
+---
+title: "day4_comp_morning"
+author: "Joe DeCesaro"
+date: "8/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+```
+
+
+```{r}
+quarter_splits <- c(1.0, 1.1, 1.2, 1.1, 1.4, 1.5, 1.6, 1.4)
+half_mile <- vector(mode = "numeric", length = length(quarter_splits) - 1)
+
+# Write a for loop that returns the total time for any two consecutive quarter miles
+
+for (i in 1:(length(quarter_splits) - 1)) {
+  half_mile[i] <- quarter_splits[i] + quarter_splits[i + 1]
+}
+half_mile
+```
+
+### Simple Functions Practice
+Basic function structure practice
+```{r}
+birddog_sum <- function(bird, dog) {
+  
+  if (bird > 50) {
+    stop("Birds can't be greater than 50!")
+  }
+  
+  if (bird < 10) {
+    message("Cool little birdie")
+  }
+  
+  if (dog < 0) {
+    warning("Can dogs be < 0 pounds?")
+  }
+  
+  add_birddog <- bird + dog
+  return(add_birddog)
+}
+
+
+birddog_sum(bird = 49, dog = 5)
+
+birddog_sum(bird = 9, dog = -5)
+
+```
+
+```{r}
+say_hello <- function(friend, weekday) {
+  print(paste("Hello", friend,"have a great", weekday))
+}
+
+say_hello(friend = "Denise", weekday = "Friday")
+
+```
+
+Print vs return example
+```{r}
+find_multiple <- function(a, b) {
+  my_multiplication <- a * b
+  print(my_multiplication)
+}
+
+final_value <- find_multiple(a = 10, b = 6)
+
+final_value
+```
+
+### Functions with conditions!
+```{r}
+animal_age <- function(animal, age) {
+  
+  if (!animal %in% c("dog", "goat")) {
+    stop("Animal must be a dog or a goat.")
+  }
+  
+  if (animal == "dog") {
+    creature_age <- age * 7
+  }
+  
+  else if (animal == "goat") {
+    creature_age <- age * 4.7
+  }
+  
+  return(creature_age)
+}
+
+# animal_age(animal = "cat", age = 10)
+# Above example breaks so it would not knit
+```
+
+Common misuse of the `%in%` operator
+```{r}
+adelie_gentoo <- penguins %>% 
+  filter(species %in% c("Adelie", "Gentoo"))
+
+adelie_gentoo_wrong <- penguins %>% 
+  filter(species == c("Adelie", "Gentoo"))
+# By writing the statement as above it is alternating between the two values in the vector until it gets to the end of the vector.
+```
+
+### Functions with for loops!
+
+```{r}
+df_means <- function(df) {
+  for (i in seq_along(df)) {
+    col_mean <- mean(df[[i]], na.rm = TRUE)
+    print(paste("The mean value of", colnames(df[i]), "is", round(col_mean,2)))
+  }
+}
+
+df_means(df = mtcars)
+
+# When building functions test it on the simplest of data sets first
+
+# Make a subset of only structural size variables from the penguins dataset for Chinstrap
+
+chinstrap_sizes <- penguins %>% 
+  filter(species %in% c("Chinstrap")) %>% 
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+
+df_means(df = chinstrap_sizes)
+  
+```
+
+### Condition to check the class of an input
+```{r}
+lunchtime <- function(tacos, price_per) {
+  
+  if (is.numeric(tacos) == FALSE) {
+    stop("You must input a number of tacos.")
+    
+  }
+  tot_price <- tacos * price_per
+  return(tot_price)
+}
+
+lunchtime(tacos = 4, price_per = 2.50)
+```
+
+
+
